@@ -15,14 +15,18 @@ export class taskRepositoryImpl implements ITaskRepository{
         return this.tasks;
     }
     async findById(id: string): Promise<Task | null> {
-        return this.tasks.find( t => t,id == id) || null;
+        return this.tasks.find( t => t.id == id) || null;
     }
     
-     update(task: Task): Promise<Task> {
-        throw new Error("Method not implemented.");
+     async update(updateTask: Task): Promise<Task> {
+        const index = this.tasks.findIndex(t => t.id == updateTask.id);
+        this.tasks[index] = updateTask;
+        return updateTask;
     }
-    delete(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+     async delete(id: string): Promise<boolean> {
+        const index = this.tasks.findIndex(t => t.id == id);
+        this.tasks.splice(index, 1);
+        return true;
     } 
 
 
