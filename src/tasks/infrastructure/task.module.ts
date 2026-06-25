@@ -6,6 +6,7 @@ import { taskRepositoryImpl } from "./persistence/task.repository.impl";
 import { GetTaskByIdUseCase } from "../application/get-task-by-id.use-case";
 import { DeleteTaskUseCase } from "../application/delete-task.use-case";
 import { UpdateTaskUseCase } from "../application/update-task.use-case";
+import { TaskRepositoryPrismaImpl } from "./persistence/task.repository.prisma.impl";
 
 //! Es el que conecta todo
 @Module({
@@ -17,7 +18,7 @@ import { UpdateTaskUseCase } from "../application/update-task.use-case";
         UpdateTaskUseCase,
         {
             provide: ITaskRepositoryToken,
-            useClass: taskRepositoryImpl
+            useClass: TaskRepositoryPrismaImpl
         }
     ],
     exports:[CreateTaskUseCase]
