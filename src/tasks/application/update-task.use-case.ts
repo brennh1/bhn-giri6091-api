@@ -1,4 +1,3 @@
-
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import type { ITaskRepository } from "../domain/task.repository.interface";
 import { ITaskRepositoryToken } from "../domain/task.repository.interface";
@@ -17,13 +16,26 @@ export class UpdateTaskUseCase {
     async execute(id: number, updateData: Partial <Pick<Task, 'title' | 'description' | 'status'>>): Promise<Task> {
        const task = await this.getTaskByIdUseCase.execute(id);
 
-       if (updateData.title != undefined) task.title = updateData.title;
-       if (updateData.description != undefined) task.description = updateData.description;
-       if (updateData.status != undefined){
-        if (updateData.status === 'COMPLETED')
-            task.status = "COMPLETED";
+       // Actualizar título
+       if (updateData.title !== undefined) {
+           task.title = updateData.title;
        }
+       
+       // Actualizar descripción
+       if (updateData.description !== undefined) {
+           task.description = updateData.description;
+       }
+       
+       // Actualizar estado - AHORA ACEPTA CUALQUIER VALOR VÁLIDO
+       if (updateData.status !== undefined) {
+           // Validar que el estado sea uno de los permitidos
+           const validStatuses = ['PENDING', 'IN_PROGRESS', 'COMPLETED'];
+           if (!validStatuses.includes(updateData.status)) {
+               throw new Error(`Estado inválido: ${updateData.status}. Debe ser PENDING, IN_PROGRESS o COMPLETED`);
+           }
+           task.status = updateData.status;
+       }
+
        return await this.taskRepository.update(task);
     }
-
 }
